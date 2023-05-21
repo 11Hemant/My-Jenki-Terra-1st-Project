@@ -21,39 +21,9 @@ pipeline {
             }
         }
 
-        stage('Action') {
-            steps {
-                script {
-                    def userInput = input(
-                        message: 'Choose an action to perform',
-                        parameters: [
-                            choice(
-                                choices: ['Apply', 'Destroy'],
-                                description: 'Select an action',
-                                name: 'choice'
-                            )
-                        ]
-                    )
-                    env.CHOICE = userInput['choice']
-                }
-            }
-        }
-
         stage('Apply') {
-            when {
-                expression { env.CHOICE == 'Apply' }
-            }
             steps {
                 sh 'terraform apply --auto-approve'
-            }
-        }
-
-        stage('Destroy') {
-            when {
-                expression { env.CHOICE == 'Destroy' }
-            }
-            steps {
-                sh 'terraform destroy --auto-approve'
             }
         }
     }
